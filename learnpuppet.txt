@@ -6,10 +6,68 @@ type {'title':
     ……
 }
 
+【user资源】
 user{'lianghua':
     name => lianghua,    #name属性可以省略，采用type的名字
-    ensure => present,    #present/absent,stopped/running
+    ensure => present,    #present/absent（可以理解删除用户）,stopped/running
     uid => 700,
-    home => '/home/lianghua',
-    shell => '/bin/bash'
+    gid => 777,
+    group => [    #附属组，可以指定多个附属组，附属组必须事先存在，不能包含gid对应的组名
+        wrsroot,
+        root,
+        ],
+    managehome => True,    #自动创建家目录
+    password => 'dsfefdfefdfefdsffdsafgdrfdsfef'    #我随便敲的一段乱码，如果密码使用md5的方式加密grub-md5-crypt命令
+    如果你的密码使用sha256的方式加密，可以使用perl -e 'print crype("password",q($6$salt$)),"\n";'
+    home => '/home/lianghua',    #家目录，puppet不会自动创建这个目录的，如果要在创建用户时自动为我们创建用户的家目录，需要使用managehome属性
+    shell => '/bin/bash',    #指定用户的默认登录shell类型
+    comment => 'www.lianghua.net',
+    expire => '2016-12-12'
+    #system => True    #这一行已经被注释掉了，在执行清单时，被注释的属性不会被执行。
 }
+
+puppet apply --verbose learnpuppet.pp
+
+【group资源】
+group{"lianghua":    #name属性，可省
+    ensure => present,    #必须存在，并且目标状态与我们定义的相同
+    gid => 666,    #组id
+    system => false,    #指定当前组是否为系统组，默认为false，当显示指定system属性并且设置为true时，则为系统组。
+}
+
+【cron资源】：管理目标服务器上的定时任务，作用相当于crontab命令。
+corn{'corn_name':
+    #name => corn_name,    #任务名称，可省
+    #ensure => absent,    #表示创建或删除指定任务，可省，默认值present，表示对应定时任务必须存在且与定义状态完全一致。
+    command => '/bin/cat /testdir/test.sh >> /testdir/lianghua.net',    #指定定时任务需要执行的程序
+    user => root,    #指定当前任务是为哪个用户设定的
+    minute => '*/1',    #指定定时任务的分钟时间格式，例子表示每1分钟，省略不写默认为"*".
+    #hour => *,
+    #monthday => *,
+    #month => *，
+    #weekday => *，
+}
+
+【packet资源】：管理目标服务器上的程序包
+package{'tree':    #name属性省略的情况下，title就是name.
+    ensure => installed,    #对于packet资源来说，可以使用absent（卸载）/present（安装）/installed（安装）/latest（获取最新版本）
+    #provider => rpm,    #当puppet默认的provider不符合我们的实际使用场景时，可以指定使用哪种provider
+    #source => '/testdir/tree-1.5.3-3.e16.x86_64.rpm',    #指定安装包文件，如果被管理服务器上存在类似yum源这样的provider，则可以省略此属性
+    省略此属性后，yum源会按照name属性或title的名字自动安装对应的package，如果对应被管理服务器上没有类似yum源这样的provider，那么source属性是必须的
+    
+}
+
+【service资源】启动或停止目标服务器上的服务。
+service{'nginx':
+    ensure => running,    #表示当前服务的状态running表示运行，stopped表示停止对应服务。
+    enable => true,    #trun表示开机自启动，false表示不会开机自启动
+    start => '/usr/sbin/nginx',    #用户手动指定服务对应的启动命令
+    restart => '/usr/sbin/nginx -t && /usr/sbin/nginx -s reload',    #手动指定的restart操作对应的命令，但是为了保险起见，通常会将此属性对应的命令设置为reload
+}
+
+
+
+
+
+
+
