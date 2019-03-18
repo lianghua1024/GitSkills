@@ -8,7 +8,7 @@ type {'title':
 
 user{'lianghua':
     name => lianghua,    #name属性可以省略，采用type的名字
-    ensure => present,
+    ensure => present,    #present/absent,stopped/running
     uid => 700,
     home => '/home/lianghua',
     shell => '/bin/bash'
