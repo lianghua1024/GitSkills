@@ -1,0 +1,15 @@
+【puppet资源定义】
+puppet describe -l查看所有支持的资源
+type {'title':
+	attribute1 	=> value1,
+	atrribute2	=> value2,
+    ……
+}
+
+user{'lianghua':
+    name => lianghua,    #name属性可以省略，采用type的名字
+    ensure => present,
+    uid => 700,
+    home => '/home/lianghua',
+    shell => '/bin/bash'
+}
