@@ -164,3 +164,35 @@ gpgcheck属性：是否开启gpg检查，0表示不检查。
 gpgkey属性：当启动gpgcheck时对应的key
 enable属性：是否启动这个yum源，1表示启动，0表示不启动
 
+【元参数】：before/require/notify/subscribe
+引用语法：Type['resource name']
+user{"lhthink":
+    ensure => present,
+    gid => 888,
+    managehome => true,
+}
+
+group{"linuxgroup"
+    ensure => present,
+    gid => 888,
+    before => User['lhthink'],    #或者在user资源中加require => Group['linuxgroup']
+}
+
+--------------------------------------------------------------------------------------------------------------------
+file{"nginxconf":
+    path => '/etc/nginx/conf.d/default.conf',
+    ensure => present,
+    source => '/template/default.conf',
+}
+
+exec{"nginxreload":
+    command => "/usr/sbin/nginx -s reload",
+    subscribe => File["nginxconf"],    #订阅file资源，当有变化时会收到通知
+    refreshonly => true,
+}
+
+【通知链】：不需要使用notify/subscribe这两个属性，实现订阅通知的功能
+语法：File['nginxconf'] ~> Exec['nginxreload']
+
+【次序链】：不使用before/require实现资源先后顺序
+语法：Package['httpd'] -> File['httpdconf'] -> Service['httpdsrv']
