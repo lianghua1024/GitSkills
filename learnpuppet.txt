@@ -65,9 +65,60 @@ service{'nginx':
     restart => '/usr/sbin/nginx -t && /usr/sbin/nginx -s reload',    #手动指定的restart操作对应的命令，但是为了保险起见，通常会将此属性对应的命令设置为reload
 }
 
+【file资源】管理文件的内容/属主组以及文件的权限，同时还可以用它管理目录、链接文件
+#创建一个文件，被创建的文件夹为/testdir/zsyfile，文件内容为content属性对应的值
+file{'lianghuafile':
+    path => '/testdir/zsyfile',
+    ensure => file,
+    content => "www.lianghuathink.net\n",
+}
 
+#复制/etc/fstab文件中的内容到/testdir/lianghuafile文件中，
+#并且设置lianghuafile文件的属主数组均为lianghuathink，文件权限为600
+file{'/testdir/lianghuafile1':
+    ensure => present,
+    source => '/etc/fstab',
+    owner => lianghuathink,
+    group => lianghuathink,
+    mode => 0600,
+}
 
+#复制/testdir/abc目录中的所有内容到/testdir/dir目录下
+file{'/testdir/dir':
+    ensure => directory,
+    source => '/testdir/abc',
+    recurse => true,
+}
 
+#注意file资源不会自动创建目录，上述三个例子中，/testdir目录已经事先存在
+#使用如下方法，可以手动的一次将目录创建出来，但是这种方法比较笨拙。
+#下面，使用"[]"中的内容作为title，表示按照顺序创建多个目录
+#也可以不适用如下方法，而是借助exec资源完成
+file{["/testdir/www",
+    "/testdir/www/lianghuathink",
+    "/testdir/www/lianghuathink/net",
+    ]:
+    ensure => directory,
+}
 
+#删除对应的目录，以及目录中的所有内容。
+file{"/testdir/dd":
+    ensure => absent,
+    force => true,
+}
 
+#创建一个连接文件/testdir/lianghualink，连接指向/etc/fstab文件
+file{"/testdir/lianghualink":
+    ensure => link,
+    target => "/etc/fstab",
+}
 
+#path属性：通过此属性指定file资源所在路径，可省略，此时path属性对应的值与file资源的title相同。
+#ensure属性：present/absent（删除对应资源）/file(文件)/directory（代表目录）/link（软链接）
+#content属性：当ensure属性值为file时，使用此属性可以指定文件的内容，将要写入的文件内容使用引号引起即可，
+也可以指定内容替换为变量的值，此属性与source属性不能同时存在于同一个资源中。
+#source属性：当ensure为file时，使用此属性可以指定当前文件的内容从哪个文件中获取，使用source属性，还可以
+通过指定的puppet url远程复制文件。source属性与content属性本质上都是设置文件内容的，他们不能同时存在于同一个资源中
+当ensure为directory时，使用source属性的同时，需要配合recure属性，否则被复制目录中的子目录或者文件将不会被同时复制过来
+recurse属性：此属性用于设置被操作源目录是否被递归，当ensure属性的值为directory时，同时source属性对应的
+值为一个目录，那么需要将recurse属性设置为true，
