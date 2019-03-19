@@ -120,5 +120,47 @@ file{"/testdir/lianghualink":
 #source属性：当ensure为file时，使用此属性可以指定当前文件的内容从哪个文件中获取，使用source属性，还可以
 通过指定的puppet url远程复制文件。source属性与content属性本质上都是设置文件内容的，他们不能同时存在于同一个资源中
 当ensure为directory时，使用source属性的同时，需要配合recure属性，否则被复制目录中的子目录或者文件将不会被同时复制过来
-recurse属性：此属性用于设置被操作源目录是否被递归，当ensure属性的值为directory时，同时source属性对应的
-值为一个目录，那么需要将recurse属性设置为true，
+#recurse属性：此属性用于设置被操作源目录是否被递归，当ensure属性的值为directory时，同时source属性对应的
+值为一个目录，那么需要将recurse属性设置为true，被复制目录中的子目录和文件才能被复制到当前目录中。
+注意，recurse属性只有在配合source属性时才会递归的复制目录。
+#force属性：当ensure属性的值设置为absent时，同时file资源对应的path或者title为一个目录，那么必须将fore值
+置为true，才能删除对应目录以及目录下的文件，当file资源对应的path为一个文件，则不需要设置force属性，可以删除文件。
+#target属性：当ensure的值为link时，需要通过target属性指定连接的目标文件。
+#owner属性：指定file资源对应的属主。
+#group属性：指定file资源对应的属组。
+#mode属性：指定file资源对应的权限。
+#backup属性：使用此属性结合filebucket资源可以实现文件备份
+
+【exec资源】：在被管理服务器上执行对应命令。
+exec{'mklhdir':
+    path => "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin",
+    #path => ["/usr/local/sbin","/usr/local/bin","/sbin","/bin","/usr/sbin","/usr/bin","/root/bin],
+    onlyif => 'test -e /etc/fstab',
+    #onlyif => '/usr/bin/test -e /etc/fstab',
+    command => 'mkdir -p /testdir/lhdir/www/lhthink/net',
+    #command => '/bin/mkdir -p /testdir/lhdir/www/lhthink/net'
+}
+上述资源表示，当‘/etc/fstab’文件存在时，在被管理服务器上执行创建文件夹的命令。
+#path属性：此属性类似PATH环境变量。
+#command属性：指定将要执行的命令
+#cwd属性：执行命令的目录
+#user属性：以哪个用户的身份运行对应命令
+#group属性：以哪个组的身份运行对应的命令
+#onlyif属性：表示“运行条件”，当onlyif属性对应的命令运行成功时，才会执行command属性对一个的命令。当onlyif语句返回值为'0'时才会执行command语句
+#refreshonly属性：仅接收到订阅资源的通知时，才执行对应的命令，一般与subscribe配合，此属性可以设置为true或者false，这个属性牵扯到puppet调用资源的顺序。
+
+【yumrepo资源】：在被管理服务器上设置对应的yum源。
+yumrepo{'aliyum68':
+    #name => "aliyumCentos68",
+    baseurl => "http://mirrors.aliyun.com/centos/6.8/os/x86_64/",
+    gpgcheck => 0,
+    #gpgkey => "http://mirrors.aliyun.com/centos/6.8/os/x86_64/RPM-GPG-KEY-CentOS-6",
+    enable => 1,
+}
+
+#name属性：可省，表示yum文件的名称与yum源的名称
+#baseurl属性：设置yun源的url，与yum的配置没有任何区别
+gpgcheck属性：是否开启gpg检查，0表示不检查。
+gpgkey属性：当启动gpgcheck时对应的key
+enable属性：是否启动这个yum源，1表示启动，0表示不启动
+
