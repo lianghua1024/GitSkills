@@ -332,4 +332,62 @@ print(dd['key2'])
 OrderedDict:使用dict时，Key是无序的.如果要保持Key的顺序，可以用OrderedDict
 注意：OrderedDict的key会按照插入的顺序排列，不是key本身排序。
 
+[ChainMap]
+
+from collections import ChainMap
+import os, argparse
+
+# 构造缺省参数:
+defaults = {
+    'color': 'red',
+    'user': 'guest'
+}
+
+# 构造命令行参数:
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', '--user')
+parser.add_argument('-c', '--color')
+namespace = parser.parse_args()
+command_line_args = { k: v for k, v in vars(namespace).items() if v }
+
+# 组合成ChainMap:
+combined = ChainMap(command_line_args, os.environ, defaults)
+
+# 打印参数:
+print('color=%s' % combined['color'])
+print('user=%s' % combined['user'])
+
+【Counter】计数器，返回字符串中每个字符的个数
+from collections import Counter
+c = Counter()
+for ch in 'programming':
+    c[ch] = c[ch] + 1
+print(c)
+
+[base64]
+Base64是一种通过查表的编码方法，不能用于加密
+Base64适用于小段内容的编码，比如数字证书签名、Cookie的内容等
+
+[struct]:提供整数转化成二进制数
+import struct
+n = 10240099
+b1 = (n & 0xff000000) >> 24
+b2 = (n & 0xff0000) >> 16
+b3 = (n & 0xff00) >> 8
+b4 = (n & 0xff)
+bs = bytes([b1,b2,b3,b4])
+
+print(bs)
+
+print(struct.pack('>I',10240099))
+
+【hashlib】
+import hashlib
+md5 = hashlib.md5()
+md5.update('how are you'.encode('utf-8'))
+print(md5.hexdigest())
+
+
+
+
 
