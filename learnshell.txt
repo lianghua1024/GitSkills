@@ -18,3 +18,15 @@ $0
 Shell本身的文件名 
 $1～$n 
 添加到Shell的各参数值。$1是第1参数、$2是第2参数…。 
+
+【shell脚本中大于，大于等于，小于，小于等于、不等于的表示方法】
+大于 -gt       (greater than) 
+小于 -lt      (less than) 
+大于或等于 -ge      (greater than or equal) 
+小于或等于 -le        (less than or equal) 
+不相等 -ne    （not equal）
+--------------------- 
+作者：无知的蜗牛 
+来源：CSDN 
+原文：https://blog.csdn.net/weixin_37998647/article/details/79718821 
+版权声明：本文为博主原创文章，转载请附上博文链接！
