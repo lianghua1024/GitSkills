@@ -199,3 +199,42 @@ exec{"nginxreload":
 
 【次序链】：不使用before/require实现资源先后顺序
 语法：Package['httpd'] -> File['httpdconf'] -> Service['httpdsrv']
+
+【puppet应用-类】：1个class是一个资源的集合
+class firewall{
+    $ensure       = running,
+    $pkg_ensure   = present,
+    $service_name = $::firewall::params::service_name,
+    $package_name = $::firewall::params::package_name,
+}   
+    inherits ::firewall::params {
+    case $ensure {
+      /^(running|stopped)$/: {
+        # Do nothing.
+      }
+      default: {
+        fail("${title}: Ensure value '${ensure}' is not supported")
+      }
+    }
+    
+    case $::kernel {
+        'Linux': {
+          class { "${title}::linux":
+            ensure       => $ensure,
+            pkg_ensure   => $pkg_ensure,
+            service_name => $service_name,
+            package_name => $package_name,
+          }
+        }
+    }
+}
+
+
+class apache {
+package { httpd: ensure => installed }
+service { "httpd":
+ensure => running,
+require => Package["httpd"],
+}
+}
+
