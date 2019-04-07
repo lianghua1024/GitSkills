@@ -64,3 +64,15 @@ cat file | grep -i 字符串 | wc -l
   -x或--line-regexp   只显示全列符合的列。
   -y   此参数的效果和指定“-i”参数相同。
   --help   在线帮助。
+  
+【vim 查找替换】
+vi/vim 中可以使用 :s 命令来替换字符串
+:s/vivian/sky/ 替换当前行第一个 vivian 为 sky
+:s/vivian/sky/g 替换当前行所有 vivian 为 sky
+
+从上可知 shift(shift 1) 命令每执行一次，变量的个数($#)减一（之前的$1变量被销毁,之后的$2就变成了$1），而变量值提前一位。
+
+
+
+
+
