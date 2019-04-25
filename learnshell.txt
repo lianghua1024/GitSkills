@@ -130,17 +130,31 @@ W file 写并追加模板块的第一行到file末尾。
 删除文件的第2行到末尾所有行：sed '2,$d' file
 删除文件最后一行：sed '$d' file
 
-
 正则表达式 \w\+ 匹配每一个单词，使用 [&] 替换它，& 对应于之前所匹配到的单词：
 echo this is a test line | sed 's/\w\+/[&]/g'
 [this] [is] [a] [test] [line]
-
 
 eval命令将会首先扫描命令行进行所有的替换，然后再执行命令
 test.txt内容：hello shell world!
 myfile="cat test.txt"
 (1)echo $myfile　　#result:cat test.txt
 (2)eval echo $myfile　　#result:hello shell world!
+
+head 与 tail 就像它的名字一样的浅显易懂，它是用来显示开头或结尾某个数量的文字区块，
+head 用来显示档案的开头至标准输出中
+tail 想当然尔就是看档案的结尾，看看下面的范例：
+## (1)
+displays the first 6 lines of a file
+head -6 readme.txt
+## (2)
+displays the last 25 lines of a file
+tail -25 mail.txt
+范例一是显示档案的前 6 行，范例二则是显示档案最后的 25 行。
+而下面的范别，结合 了 head 与 tail 的指令，显示档案的第 11 行到第 20 行
+#head与tail一套组合拳：
+head -n 10030 application.log | tail -n +10000 #数字前面有个+号就不是从后往前了
+输出application.log的10000行至10030行内容
+
 
 
 
