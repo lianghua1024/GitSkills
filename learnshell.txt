@@ -83,6 +83,8 @@ vi/vim 中可以使用 :s 命令来替换字符串
 :s/vivian/sky/g 替换当前行所有 vivian 为 sky
 :n,ms/vivian/sky/g 替换当前文件中n-m行的所有vivian 为 sky
 
+:10,15g/^/s//\/\// 在10到15行的行首插入//
+
 
 从上可知 shift(shift 1) 命令每执行一次，变量的个数($#)减一（之前的$1变量被销毁,之后的$2就变成了$1），而变量值提前一位。
 
@@ -154,6 +156,54 @@ tail -25 mail.txt
 #head与tail一套组合拳：
 head -n 10030 application.log | tail -n +10000 #数字前面有个+号就不是从后往前了
 输出application.log的10000行至10030行内容
+
+
+xshell5下 linux终端中常用的快捷键
+CTRL + ALT + T: 打开终端
+CTRL + D: 关闭标签页==logout
+CTRL + L: 清楚屏幕==clear命令
+CTRL + A: 移动到行首
+CTRL + E: 移动到行末
+CTRL + C: 终止当前任务
+复制：Ctrl+Insert
+粘贴：Shift+Insert
+
+
+getopt.getopt(args, shortopts, longopts=[])
+args指的是当前脚本接收的参数，它是一个列表，可以通过sys.argv获得
+shortopts 是短参数　　啥是短参数啊？　　类似于　这样：python test.py -h # 输出帮助信息
+longopts  是长参数　　啥是长参数啊？　　类似于　这样：python test.py -help # 输出帮助信息
+这个函数返回是一个两元组的列表（复习一下，元组的值是不可修改的！）
+举个例子：
+---------------------------------------------------------------------------------------
+#!/usr/bin/env python3.5
+import urllib.request
+import getopt
+import sys
+
+opts,args = getopt.getopt(sys.argv[1:],'-h-f:-v',['help','filename=','version'])
+for opt_name,opt_value in opts:
+    if opt_name in ('-h','--help'):
+        print("[*] Help info")
+        exit()
+    if opt_name in ('-v','--version'):
+        print("[*] Version is 0.01 ")
+        exit()
+    if opt_name in ('-f','--filename'):
+        fileName = opt_value
+        print("[*] Filename is ",fileName)
+        # do something
+        exit()
+--------------------------------------------------------------------------------------
+来详细解释一下这几行代码
+首先从短参数名开始。
+我定义了'-h-f:-v' 大家发现没有，在-f后面多了一个":"
+这个":"代表了当前参数是有值的，是一个参数名+参数值的参数
+如果我再加一个-o: 那么证明-o后面是可以接收一个值，这个值就是-o的参数值，将会保存到opts变量中。
+长参数名的方式和短参数差不多，唯一的区别就是长参数如果要接收值，那必须得在后面加上一个"="
+
+
+
 
 
 
