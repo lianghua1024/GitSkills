@@ -1,0 +1,86 @@
+数字证书：
+    数字证书就是互联网通讯中标志通讯各方身份信息的一串数字，提供了一种在Internet上验证通信实体身份的方式，
+    数字证书不是数字身份证，而是身份认证机构盖在数字身份证上的一个章或印（或者说加在数字身份证上的一个签名）。
+    它是由权威机构——CA机构，又称为证书授权（Certificate Authority）中心发行的，人们可以在网上用它来识别对方的身份。
+
+1、根证书
+    根证书一般是CA认证中心的证书，但是也可以是企业内部或个人的证书。
+    根证书的作用：
+    服务器的证书可信程度值的怀疑，但是我们信任根证书的话，就默认信任被根证书签名的服务器证书。
+
+    所有的证书文件都一般包含以下三个文件：
+    1、crt：证书的公钥（明文证书），客户端访问服务器时，服务器会下发证书给客户端供客户端验证。根证书多了一个作用则是用于签发下级证书。
+    2、key：证书的私钥，信息用公钥加密，私钥解密，不对称加密的方法。公钥分发给别人，私钥保存在本地。
+    3、csr：证书的请求文件，根证书给服务器的请求文件签名得到服务器的crt文件。
+
+2、双向认证与单向认证
+    双向认证：客户端验证服务端的公钥，服务端也验证客户端的公钥可靠性。
+    单向认证：一般是客户端需要验证服务端的证书是否可信任。服务端不验证客户端。
+（一般是客户端安装了根证书（信任根证书，安装的是CA公钥），访问服务端时，如果服务端的证书是通过根证书签名的（服务端的证书中包括CA私钥加密的信息），
+则信任该服务端，否则浏览器之类的会提示不安全连接等问题。）
+
+3、自建根证书
+    1. 创建根证书密钥文件(自己做CA)ca.key：
+    openssl genrsa -des3 -out ca.key 2048
+    2. 去除密码
+    openssl rsa -in ca.key -out ca.key
+    3. 创建根证书的申请文件ca.csr：
+    openssl req -new -key ca.key -out ca.csr
+    4. 创建一个自当前日期起为期十年的根证书ca.crt【用来签名其它证书，并配置在客户端信任列表，如果开启双向验证，也需要配置在服务端】：
+    openssl x509 -req -days 3650 -sha1 -extensions v3_ca -signkey ca.key -in ca.csr -out ca.crt
+
+4、使用根证书签发下级证书
+    1、如果服务器提交了csr文件，则直接签名（此时服务端的私钥它自己保存，不需要提交上来）：
+    openssl x509 -req -days 3650 -sha1 -extensions v3_req -CA ca.crt -CAkey ca.key  -CAcreateserial -in server.csr -out server.crt
+    （解释：ca.crt ：根证书
+    ca.key：根证书私钥
+    server.csr ：服务器证书请求文件
+    server.crt	：需要生成的证书文件）
+    2、自己生成证书文件私钥，再用csr生成crt：
+        1. 创建服务器证书密钥server.key：
+        openssl genrsa -des3 -out server.key 2048
+        2. 去除密码：
+        openssl rsa -in server.key -out server.key
+        3. 创建服务器证书的申请文件server.csr：
+        openssl req -new -key server.key -out server.csr
+        4. 创建自当前日期起有效期为期两年的服务器证书server.crt【配置在服务端，将会在客户端请求时下发给客户端】：
+        openssl x509 -req -days 3650 -sha1 -extensions v3_req -CA ca.crt -CAkey ca.key  -CAcreateserial -in server.csr -out server.crt
+        （备注：制作服务器证书请求文件时需要指定CN段（根证书随意）
+        Common Name (eg, your name or your server's hostname) []:www.huawei.com                       #通用名
+        注：服务端证书的CN应为域名、IP地址、主机名或服务名称等身份信息；客户端证书CN应为主机名、IP地址信息、服务名称或用户名称等身份信息；
+        设备证书CN应为设备的唯一性信息，比如ESN、MAC地址及设备类型等设备信息(可以写127.0.0.1)。
+        否则会提示签发的证书与域名不符合，如果服务端是IP地址，这里直接填写IP
+        两者的区别就是自创建的服务器证书有密钥文件，导入证书到服务端时需要手动导入密钥文件。
+        ）
+
+5、查看证书信息
+    x509标准的数字证书有两种编码方式：PEM、DER。
+    1、PEM是纯文本的方式，以----BEGIN xxxx---之类开头的。
+    2、DER是二进制的，无法直接预览。
+
+    证书的后缀有很多：
+    .pem：pem格式的证书。
+    .der：der编码格式的证书。
+    .crt：有可能是pem编码的，也有可能是der格式的，一般是pem格式的。
+    .cer：有可能是pem编码的，也有可能是der格式的，一般是cer格式的。
+    .p12：也写作 .pfx，全称：PKCS #12，一份.p12=x509证书+私钥。
+
+    证书查看方式：
+    pem编码查看方式：openssl x509 -in server.crt -text -noout
+    der编码查看方式：openssl x509 -in server.crt -inform der -text -noout
+
+    key的查看方式：
+    pem编码查看方式：openssl rsa -in xxx.key -text -noout
+    der编码查看方式：openssl rsa -in xxx.key -text -noout -inform der
+
+    编码格式转换：
+    pem转der：openssl x509 -in xxx.pem -outform der -out xxx.der
+    der转pem：openssl x509 -in xxx.der -inform der -outform pem -out xxx.pem
+
+6、将根证书加入系统可信列表中
+    这样的话系统访问由该证书签名的服务端，不会报安全警告。
+    将自签名的根证书加入系统（控制节点）的可信列表中：
+    linux中 # cat ca.crt  >>/etc/pki/tls/certs/ca-bundle.crt
+    window中，直接双击或者在浏览器中添加。
+
+
