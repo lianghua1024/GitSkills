@@ -256,8 +256,88 @@ $NF：表示当前行分割后的最后一列
 
 
 
+netstat介绍：https://www.cnblogs.com/echo1937/p/6677325.html
+
+从整体上看，netstat的输出结果可以分为两个部分：
+一个是Active Internet connections，称为有源TCP连接，其中"Recv-Q"和"Send-Q"指的是接收队列和发送队列，这些数字一般都应该是0。如果不是则表示软件包正在队列中堆积，这种情况非常少见。
+另一个是Active UNIX domain sockets，称为有源Unix域套接口(和网络套接字一样，但是只能用于本机通信，性能可以提高一倍)。
+
+常用参数：
+-a (all)显示所有选项，netstat默认不显示LISTEN相关
+-t (tcp)仅显示tcp相关选项
+-u (udp)仅显示udp相关选项
+-n 拒绝显示别名，能显示数字的全部转化成数字。(重要)
+-l 仅列出有在 Listen (监听) 的服務状态
+-p 显示建立相关链接的程序名(macOS中表示协议 -p protocol)
+-r 显示路由信息，路由表
+-e 显示扩展信息，例如uid等
+-s 按各个协议进行统计 (重要)
+-c 每隔一个固定时间，执行该netstat命令。
+
+例如：
+找出运行在指定端口的进程：netstat -an | grep ':22'
 
 
+if 使用的表达式
+
+Primary 意义
+[ -a 文件 ] 如果文件存在为真。
+[ -b 文件 ] 如果 文件 存在 而且 是一个 块-特殊 文件为真。
+[ -c 文件 ] 为真 如果 文件 存在 而且 是一个 字-特殊 文件。
+ 
+
+[ -d 文件 ] 为真 如果 文件 存在 而且 是一个 目录。
+[ -e 文件 ] 为真 如果 文件 存在。
+[ -f 文件 ] 为真 如果 文件 存在 而且 是一个 普通 文件。
+[ -g 文件 ] 为真 如果 文件 存在 而且 已经设置了他的 SGID 位。
+[ -h 文件 ] 为真 如果 文件 存在 而且 是一个 符号连接。
+[ -k 文件 ] 为真 如果 文件 存在 而且 他的粘住位已经设置。
+[ -p 文件 ] 为真 如果 文件 存在 而且 是一个 已经命名的管道 (F 如果O)。
+[ -r 文件 ] 为真 如果 文件 存在 而且 是可读的。
+[ -s 文件 ] 为真 如果 文件 存在 而且 比零字节大。
+[ -t FD ] 为真 如果 文件 文件描述符已经打开 而且 指向一个终端。
+[ -u 文件 ] 为真 如果 文件 存在 而且 已经设置了他的 SUID (set user ID)位。
+[ -w 文件 ] 为真 如果 文件 为真 如果 文件 存在 而且 是可写的。
+[ -x 文件 ] 为真 如果 文件 存在 而且 是可执行的。
+[ -O 文件 ] 为真 如果 文件 存在 而且 属于有效用户ID。
+[ -G 文件 ] 为真 如果 文件 存在 而且 属于有效组ID。
+[ -L 文件 ] 为真 如果 文件 存在 而且 是一个 符号连接。
+[ -N 文件 ] 为真 如果 文件 存在 而且 has been mod 如果ied since it was last read。
+[ -S 文件 ] 为真 如果 文件 存在 而且 是一个 socket。
+[ 文件1 -nt 文件2 ] 为真 如果 文件1 has been changed more recently than 文件2, or 如果
+文件1 存在 而且
+文件2 does not。
+[ 文件1 -ot 文件2 ] 为真 如果 文件1 比 文件2 旧, 或者 文件2 存在而且 文件1 不存在。
+[ 文件1 -ef 文件2 ] 为真 如果 文件1 而且 文件2 refer to the same device 而且 inode
+numbers。
+[ -o 选项名 ] 为真 如果 shell 选项 "选项名" 开启。
+[ -z STRING ] 为真 如果 "STRING"的长度是零。
+[ -n STRING ] 或者 [ STRING ] 为真 "STRING"的长度是非零值。
+[ STRING1 == STRING2 ] 如果两个字符串相等为真。 "=" may be used instead of "==" for
+strict POSIX compliance。
+[ STRING1 != STRING2 ] 为真 如果 两两个字符串不相等。
+[ STRING1 < STRING2 ] 为真 如果 "STRING1" sorts before "STRING2" lexicographically in the
+current locale。
+[ STRING1 > STRING2 ] 为真 如果 "STRING1" sorts after "STRING2" lexicographically in the
+current locale。
+[ ARG1 OP ARG2 ]
+"OP" 是 -eq, -ne, -lt, -le, -gt or -ge 其中一个。 These arithmetic binary operators
+return 为真 如果 "ARG1" is equal to, not equal to, less than, less than or equal to, greater
+than, or greater than or equal to "ARG2", respectively。 "ARG1" 而且 "ARG2" are
+integers。
+表达式可以借以下操作符组合起来, listed in decreasing order of precedence:
+操作符效果
+[ ! EXPR ] 如果EXPR 为假则为真。
+[ ( EXPR ) ] 返回EXPR 的值。 这样可以用来忽略正常的操作符优先级。
+ 
+
+[ 表达式1 -a 表达式2 ] 如果表达式1 而且表达式2 同时为真则为真 。
+[ 表达式1 -o 表达式2 ] 如果表达式1 或者表达式2 其中之一为真则为真。
+
+python os.stat() 和 stat模块详解:https://www.cnblogs.com/maseng/p/3386140.html
+
+
+敲一下w，即可看到当前在线人数
 
 
 
