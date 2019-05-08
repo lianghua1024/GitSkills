@@ -1,0 +1,51 @@
+前提是安装了libvirt、qemu等相关虚拟软件
+
+
+
+1. 首先禁用并卸载NetworkManager工具，启用自带的network服务 
+
+chkconfig NetworkManager off
+chkconfig network on
+service NetworkManager stop
+yum erase NetworkManager
+
+2.配置网络参数
+
+首先禁用kvm自带的默认网络配置virbr0
+virsh net-list #查看默认的kvm网络配置
+删除kvm自带默认网络配置 
+
+virsh net-destroy default
+virsh net-undefine default
+service libvirtd restart
+
+查看网络配置ifconfig 
+
+3. 配置bridge network
+
+
+cd /etc/sysconfig/network-scripts
+vi ifcfg-eth0 vim ifcfg-eth0
+内容如下：
+
+DEVICE=eth0
+ONBOOT=yes
+BRIDGE=br0
+保存退出
+vi ifcfg-br0
+内容如下：
+
+DEVICE=br0
+ONBOOT=yes
+TYPE=Bridge
+BOOTPROTO=static
+IPADDR=192.168.0.123
+NETMASK=255.255.255.0
+GATEWAY=192.168.0.254
+DELAY=0
+保存退出
+
+4. 重启network服务之后生效 
+
+
+service network restart
