@@ -1,0 +1,89 @@
+【创建版本库：】
+git init瞬间Git就把仓库建好了
+git add readme.txt把文件添加到仓库
+git commit告诉Git，把文件提交到仓库
+
+【仓库状态：】
+git status查看仓库状态
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+要随时掌握工作区的状态，使用git status命令。
+
+【版本回退：】
+git log查看曾经做过的操作记录
+git log --pretty=oneline
+git reset --hard HEAD^
+
+【工作区和暂存区：】
+在Git中，用HEAD表示当前版本，也就是最新的提交1094adb...（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100
+HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset --hard commit_id。
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+了解work、stage、branch的意义
+工作区有一个隐藏目录.git，这个不算工作区，而是Git的版本库
+
+
+【管理修改：】
+Git如此优秀，因为Git跟踪并管理的是修改，而非文件
+
+【撤销修改：】
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout -- file。
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD <file>，就回到了场景1，第二步按场景1操作。
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。
+
+【删除文件】
+先手动删除文件，然后使用git rm <file>和git add<file>效果是一样的
+git rm test.txt
+git commit -m "remove test.txt"
+
+【远程仓库】
+这个世界上有个叫GitHub的神奇的网站，从名字就可以看出，这个网站就是提供Git仓库托管服务的，所以，只要注册一个GitHub账号，就可以免费获得Git远程仓库。
+关联一个远程库，使用命令git remote add origin git@server-name:path/repo-name.git
+联后，使用命令git push -u origin master第一次推送master分支的所有内容
+此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改
+
+【克隆一个仓库】
+要克隆一个仓库，首先必须知道仓库的地址，然后使用git clone命令克隆
+git clone git@github.com:michaelliao/gitskills.git
+git clone https://github.com/michaelliao/gitskills.git
+Git支持多种协议，包括https，但通过ssh支持的原生git协议速度最快
+
+【分支】
+假设你准备开发一个新功能，但是需要两周才能完成，第一周你写了50%的代码，如果立刻提交，由于代码还没写完，不完整的代码库会导致别人不能干活了。如果等代码全部写完再一次提交，又存在丢失每天进度的巨大风险。
+现在有了分支，就不用怕了。你创建了一个属于你自己的分支，别人看不到，还继续在原来的分支上正常工作，而你在自己的分支上干活，想提交就提交，直到开发完毕后，再一次性合并到原来的分支上，这样，既安全，又不影响别人工作。
+Git鼓励大量使用分支：
+查看分支：git branch
+创建分支：git branch <name>
+切换分支：git checkout <name>
+创建+切换分支：git checkout -b <name>
+合并某分支到当前分支：git merge <name>
+删除分支：git branch -d <name>
+
+【合并冲突】
+当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+解决冲突就是把Git合并失败的文件手动编辑为我们希望的内容，再提交
+
+【bug分支】
+git stash          功能，可以把当前工作现场“储藏”起来，等以后恢复现场后继续工作。
+git stash list     命令看看“藏起来”的现场都有哪些
+git stash apply    恢复，但是恢复后，stash内容并不删除
+git stash pop      恢复的同时把stash内容也删了
+
+【删除分支】
+开发一个新feature，最好新建一个分支；
+如果要丢弃一个没有被合并过的分支，可以通过git branch -D <name>强行删除
+
+【推送分支】
+git push origin master    推送master分支
+git push origin dev    推送dev分支
+
+【标签】
+git tag <tagname>                         用于新建一个标签，默认为HEAD，也可以指定一个commit id
+git tag -a <tagname> -m "blablabla..."    可以指定标签信息
+git tag                                   可以查看所有标签
+git tag -d v0.1                           删除标签
+git push origin <tagname>                 将标签推送到远程
+
+【码云】
+使用GitHub时，国内的用户经常遇到的问题是访问速度太慢，有时候还会出现无法连接的情况，码云就是国内的Git托管服务
+
+
