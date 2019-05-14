@@ -126,6 +126,13 @@ W file 写并追加模板块的第一行到file末尾。
 = 打印当前行号码。  
 # 把注释扩展到下一个换行符以前。  
 
+撤销：u
+恢复撤销：Ctrl + r
+
+
+
+
+
 删除空白行：sed '/^$/d' file
 直接编辑文件选项-i
 删除文件的第2行：sed '2d' file
@@ -339,6 +346,29 @@ python os.stat() 和 stat模块详解:https://www.cnblogs.com/maseng/p/3386140.h
 
 敲一下w，即可看到当前在线人数
 
+【cut】
+cut命令可以从一个文本文件或者文本流中提取文本列。
+cut语法
+[root@www ~]# cut -d'分隔字符' -f fields <==用于有特定分隔字符
+[root@www ~]# cut -c 字符区间            <==用于排列整齐的信息
+选项与参数：
+-d  ：后面接分隔字符。与 -f 一起使用；
+-f  ：依据 -d 的分隔字符将一段信息分割成为数段，用 -f 取出第几段的意思；
+-c  ：以字符 (characters) 的单位取出固定字符区间；
 
+举个例子：
+PATH 变量如下
+[root@www ~]# echo $PATH
+/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/X11R6/bin:/usr/games
+# 1 | 2       | 3   | 4       | 5            | 6            | 7
+将 PATH 变量取出，我要找出第五个路径。
+#echo $PATH | cut -d ':' -f 5
+/usr/local/bin
+
+Python continue 语句跳出本次循环，而break跳出整个循环。
+
+continue 语句用来告诉Python跳过当前循环的剩余语句，然后继续进行下一轮循环。
+
+continue语句用在while和for循环中。
 
 
