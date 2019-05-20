@@ -243,6 +243,17 @@ echo "ABCD" >> temp.txt  将ABCD追加到temp.txt中
 2.这个时候就用到命令  tee
 echo "ABCD" | tee temp.txt  将输出内容"ABCD"重定向到 temp.txt 同时在终端打印输出
 echo "ABCD" | tee temp.txt temp02.txt  将输出内容"ABCD"同时重定向到 temp.txt 和 temp02.txt 并且在终端打印输出
+echo -n "Enter your name:"   //参数-n的作用是不换行，echo默认是换行
+echo "\"It is a test\""   //输出："It is a test"
+=============================================================================================
+                能否引用变量  |  能否引用转移符   |  能否引用文本格式符(如：换行符、制表符)
+
+单引号  |        否           |        否         |        否
+                                               
+双引号  |        能           |        能         |        能
+                                               
+无引号  |        能           |        能         |        否                          
+=============================================================================================
 
 
 awk:一个报告生成器，它拥有强大的文本格式化能力。
@@ -285,7 +296,7 @@ netstat介绍：https://www.cnblogs.com/echo1937/p/6677325.html
 找出运行在指定端口的进程：netstat -an | grep ':22'
 
 
-if 使用的表达式
+if 使用的表达式[]
 
 Primary 意义
 [ -a 文件 ] 如果文件存在为真。
@@ -341,6 +352,16 @@ integers。
 [ 表达式1 -a 表达式2 ] 如果表达式1 而且表达式2 同时为真则为真 。
 [ 表达式1 -o 表达式2 ] 如果表达式1 或者表达式2 其中之一为真则为真。
 
+
+Shell 里面的中括号（包括单中括号与双中括号）可用于一些条件的测试：
+算术比较, 比如一个变量是否为0,      [ $var -eq 0 ]
+文件属性测试，比如一个文件是否存在，[ -e $var ] 
+                        是否是目录，[ -d $var ]
+字符串比较, 比如两个字符串是否相同，[[ $var1 = $var2 ]]
+
+
+
+
 python os.stat() 和 stat模块详解:https://www.cnblogs.com/maseng/p/3386140.html
 
 
@@ -365,10 +386,28 @@ PATH 变量如下
 #echo $PATH | cut -d ':' -f 5
 /usr/local/bin
 
-Python continue 语句跳出本次循环，而break跳出整个循环。
+read命令接收标准输入（键盘）的输入，或其他文件描述符的输入。
+得到输入后，read命令将数据放入一个标准变量中。下面是 read命令的例子
 
-continue 语句用来告诉Python跳过当前循环的剩余语句，然后继续进行下一轮循环。
+#!/bin/bash
+echo -n "Enter your name:"   //参数-n的作用是不换行，echo默认是换行
+read  name                   //从键盘输入
+echo "hello $name,welcome to my program"     //显示信息
+exit 0                       //退出shell程序。
 
-continue语句用在while和for循环中。
+
+由于read命令提供了-p参数，允许在read命令行中直接指定一个提示。
+所以上面的脚本可以简写成下面的脚本:
+#!/bin/bash
+read -p "Enter your name:" name
+echo "hello $name, welcome to my program"
+exit 0
+
+在上面read后面的变量只有name一个，也可以有多个，这时如果输入多个数据，则第一个数据给第一个变量，第二个数据给第二个变量，
+如果输入数据个数过多，则最后所有的值都给第一个变量。如果太少输入不会结束。
+
+
+
+
 
 
