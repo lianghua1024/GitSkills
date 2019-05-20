@@ -1,4 +1,4 @@
-linux 大学网：
+linux 学习网：
 https://www.linuxdaxue.com/linux-shell-serial-course.html
 
 
@@ -406,7 +406,6 @@ exit 0
 
 在上面read后面的变量只有name一个，也可以有多个，这时如果输入多个数据，则第一个数据给第一个变量，第二个数据给第二个变量，
 如果输入数据个数过多，则最后所有的值都给第一个变量。如果太少输入不会结束。
-
 
 
 
