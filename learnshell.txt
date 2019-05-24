@@ -557,6 +557,21 @@ type=USER_START msg=audit(1507898701.421:516): pid=8523 uid=0 auid=0 ses=25 subj
 sealert -a /var/log/audit/audit.log
 执行完命令之后，系统需要花一段时间去分析日志中的违规行为并给出分析报告。分析报告的结构讲解请看下图
 
+设置程序自启动：
+1.ln -s
+    /etc/rc.d/init.d/msg.script
+    chmod u+x /etc/rc.d/init.d/msg.script
+    ln -s /etc/rc.d/init.d/msg.script /etc/rc.d/rc3.d/S99msg.script
+
+2.服务已存在，直接修改 /etc/rc.d/rcN.d/XXX
+3.chkconfig
+4.ntsysv
+
+dmesg查看启动日志： dmesg | grep eno1
+
+20190524
+
+
 
 
 
