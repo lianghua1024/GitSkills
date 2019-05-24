@@ -1,4 +1,4 @@
-linux 大学网：
+linux 学习网：
 https://www.linuxdaxue.com/linux-shell-serial-course.html
 
 
@@ -569,7 +569,7 @@ sealert -a /var/log/audit/audit.log
 
 dmesg查看启动日志： dmesg | grep eno1
 
-20190524
+
 
 
 
