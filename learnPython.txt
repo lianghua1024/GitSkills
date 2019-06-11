@@ -723,6 +723,7 @@ python中时间日期格式化符号：
 \t          八个空格
 \\          \
 
+<<<<<<< HEAD
 Python 字典(Dictionary) fromkeys()方法
 Python 字典 fromkeys() 函数用于创建一个新字典，以序列 seq 中元素做字典的键，value 为字典所有键对应的初始值
 #!/usr/bin/python
@@ -750,6 +751,44 @@ Value : {'Age': 7, 'Name': 'Zara', 'Sex': 'female'}
 
 
 在python中 None,  False, 空字符串"", 0, 空列表[], 空字典{}, 空元组()都相当于False
+=======
+python之six用法
+
+six.PY2 返回一个表示当前运行环境是否为python2的boolean值
+six.PY3 返回一个表示当前运行环境是否为python3的boolean值
+常量
+six.class_types:
+这里主要是针对python中的old-style和new-style, new-style为type, old-style为 types.ClassType。
+python2中同时有old-style和new-style，python3中只有new-style。 
+six.integer_types
+这里针对python2和python3中各自支持的int类型进行了区分：在python2中，存在 int 和 long 两种整数类型；在python3中，仅存在一种类型int。
+six.string_types:
+这里针对python2和python3中各自的string类型进行了区分：在python2中，使用的为basestring；在python3中，使用的为str。
+six.text_type:
+
+类（Class）
+Python不允许实例化的类访问私有数据，但你可以使用 object._className__attrName（ 对象名._类名__私有属性名 ）访问属性，参考以下实例：
+-----------------------------------------
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+class Runoob:
+    __site = "www.runoob.com"
+
+runoob = Runoob()
+print runoob._Runoob__site
+
+结果：
+www.runoob.com
+------------------------------------------
+单下划线、双下划线、头尾双下划线说明：
+__foo__: 定义的是特殊方法，一般是系统定义名字 ，类似 __init__() 之类的。
+_foo: 以单下划线开头的表示的是 protected 类型的变量，即保护类型只能允许其本身与子类进行访问，不能用于 from module import *
+__foo: 双下划线的表示的是私有类型(private)的变量, 只能是允许这个类本身进行访问了。
+
+
+对象的__dict__中存储了一些self.xxx的一些东西
+
+>>>>>>> 6d4acc2110c1947f1d8025c3fb6e8196d719c2d1
 
 
 
