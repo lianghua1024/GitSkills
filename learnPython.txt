@@ -798,6 +798,8 @@ Python Keyring
 >>> keyring.get_password("system", "username")
 'password'
 
+>>> keyring.get_password("CGCS", "admin")
+u'Deploy.2019'
 >>> keyring.get_keyring()                                              // 查看当前使用的keyring
 >>> keyring.set_keyring(keyring.backends.file.PlaintextKeyring())      // 设置keyring
 

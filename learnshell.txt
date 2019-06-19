@@ -139,6 +139,22 @@ W file 写并追加模板块的第一行到file末尾。
 删除文件的第2行到末尾所有行：sed '2,$d' file
 删除文件最后一行：sed '$d' file
 
+$()和``:
+在bash shell中，$()与``（反引号）都是用来做命令替换用的。
+例如 version=$(uname -r) 和 version=`uname -r` 都可以是version得到内核的版本号
+各自的优缺点：
+1. `` 基本上可用在全部的 unix shell 中使用，若写成 shell script ，其移植性比较高。但反引号容易打错或者看错。
+2. $() 并不是所有 shell 都支持
+
+${}：
+${} 用于变量替换。一般情况下，$var 与 ${var} 并没有啥不一样。但是用 ${} 会比较精确的界定变量名称的范围
+
+$[] $(())：
+它们是一样的，都是进行数学运算的。支持+ - * / %:分别为“加、减、乘、除、取模”。但是bash只能作整数运算，对于浮点数是当作字符串处理的。
+在$(())中的变量名称，可用于前面加$符号来替换，也可以不用，如：
+$(( $a + $b + $c)) 等同于 $(( a + b + c ))
+
+
 正则表达式 \w\+ 匹配每一个单词，使用 [&] 替换它，& 对应于之前所匹配到的单词：
 echo this is a test line | sed 's/\w\+/[&]/g'
 [this] [is] [a] [test] [line]
@@ -570,6 +586,21 @@ sealert -a /var/log/audit/audit.log
 dmesg查看启动日志： dmesg | grep eno1
 
 
+ls –l命令显示文件的修改时间，ls –ul命令显示文件的访问时间。
+
+
+更改/var/log下所有日志权限为640的脚本：
+set_permission()
+{
+    find /var/log -type f | xargs chmod 640
+
+    grep "find /var/log" /var/spool/cron/root >/dev/null 2>&1
+    if [ $? -ne 0 ] 
+    then  
+        echo "PATH=/bin:/usr/bin:/usr/sbin" >> /var/spool/cron/root
+        echo "*/5 * * * * /usr/bin/find /var/log -type f | xargs /usr/bin/chmod 640 >/dev/null 2>&1" >> /var/spool/cron/root
+    fi
+}            
 
 
 
